@@ -50,10 +50,9 @@
 			removeCar: function removeCar(id, table){
 				
 
-				table.childNodes.forEach(table.childNodes, function(item){
+				Array.prototype.forEach.call(table.childNodes, function(item){
 					if(item.id === id){
-						console.log(item);
-						//item.remove();
+						item.remove();
 					}
 				});
 			},

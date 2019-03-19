@@ -37,7 +37,6 @@
 	*/
 
 	var app = (function appController(){
-		console.log('teste');
 		return {
 			init: function init(){
 				this.companyInfo();
@@ -48,11 +47,34 @@
 				$('[data-js="form-register"]').on('submit', this.handleSubmit);
 			},
 
+			removeCar: function removeCar(id, table){
+				
+
+				table.childNodes.forEach(table.childNodes, function(item){
+					if(item.id === id){
+						console.log(item);
+						//item.remove();
+					}
+				});
+			},
+
 			handleSubmit: function handleSubmit(e){
 				e.preventDefault();
-				console.log('submit');
 				var $tableCar = $('[data-js="table-car"]').get();
 				$tableCar.appendChild(app.createNewCar());
+				var idButton = app.getIdButtonRemove($tableCar);
+
+				var $buttonRemove = $('button[id="'+idButton+'"]');
+				$buttonRemove.on('click', function(){
+					app.removeCar(this.id, $tableCar);
+				});
+			},
+
+			getIdButtonRemove: function getIdButtonRemove(table){
+				var id = (table.childNodes.length)-1;
+				table.lastChild.setAttribute('id', id);
+				table.lastChild.childNodes[5].childNodes[0].setAttribute('id', id);
+				return id;
 			},
 
 			createNewCar: function createNewCar(){
@@ -64,20 +86,28 @@
 				var $tdYear = document.createElement('td');
 				var $tdPlate = document.createElement('td');
 				var $tdColor = document.createElement('td');
+				var $tdRemove = document.createElement('td');
+				var $remove = document.createElement('button');
 
 				$image.src = $('[data-js="image"]').get().value;
 				$tdImage.appendChild($image);
+
+				$remove.innerHTML = 'X';
+				$remove.setAttribute('data-js', 'remove');
+
 
 				$tdBrand.textContent = $('[data-js="brand-model"]').get().value;
 				$tdYear.textContent = $('[data-js="year"]').get().value;
 				$tdPlate.textContent = $('[data-js="plate"]').get().value;
 				$tdColor.textContent = $('[data-js="color"]').get().value;
+				$tdRemove.appendChild($remove);
 
 				$tr.appendChild($tdImage);
 				$tr.appendChild($tdBrand);
 				$tr.appendChild($tdYear);
 				$tr.appendChild($tdPlate);
 				$tr.appendChild($tdColor);
+				$tr.appendChild($tdRemove);
 
 				return $fragment.appendChild($tr);
 			},

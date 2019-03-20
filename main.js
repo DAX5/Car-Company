@@ -2,38 +2,13 @@
 	'use strict';
 
 	/*
-	Vamos estruturar um pequeno app utilizando módulos.
-	Nosso APP vai ser um cadastro de carros. Vamos fazê-lo por partes.
-	A primeira etapa vai ser o cadastro de veículos, de deverá funcionar da
-	seguinte forma:
-	- No início do arquivo, deverá ter as informações da sua empresa - nome e
-	telefone (já vamos ver como isso vai ser feito)
-	- Ao abrir a tela, ainda não teremos carros cadastrados. Então deverá ter
-	um formulário para cadastro do carro, com os seguintes campos:
-		- Imagem do carro (deverá aceitar uma URL)
-		- Marca / Modelo
-		- Ano
-		- Placa
-		- Cor
-		- e um botão "Cadastrar"
-
-	Logo abaixo do formulário, deverá ter uma tabela que irá mostrar todos os
-	carros cadastrados. Ao clicar no botão de cadastrar, o novo carro deverá
-	aparecer no final da tabela.
-
-	Agora você precisa dar um nome para o seu app. Imagine que ele seja uma
-	empresa que vende carros. Esse nosso app será só um catálogo, por enquanto.
-	Dê um nome para a empresa e um telefone fictício, preechendo essas informações
-	no arquivo company.json que já está criado.
-
-	Essas informações devem ser adicionadas no HTML via Ajax.
-
-	Parte técnica:
-	Separe o nosso módulo de DOM criado nas últimas aulas em
-	um arquivo DOM.js.
-
-	E aqui nesse arquivo, faça a lógica para cadastrar os carros, em um módulo
-	que será nomeado de "app".
+	Agora vamos criar a funcionali dade de "remover" um carro. Adicione uma nova
+	coluna na tabela, com um botão de remover.
+	Ao clicar nesse botão, a linha da tabela deve ser removi da.
+	Faça um pull request no seu repositório, na branch `challenge-31`, e cole
+	o link do pull request no `console.log` abaixo.
+	Faça um pull request, também com a branch `challenge-31`, mas no repositório
+	do curso, para colar o link do pull request do seu repo.
 	*/
 
 	var app = (function appController(){
@@ -47,36 +22,26 @@
 				$('[data-js="form-register"]').on('submit', this.handleSubmit);
 			},
 
-			removeCar: function removeCar(id, table){
-				
-
-				Array.prototype.forEach.call(table.childNodes, function(item){
-					if(item.id === id){
-						item.remove();
-					}
-				});
-			},
-
 			handleSubmit: function handleSubmit(e){
 				e.preventDefault();
 				var $tableCar = $('[data-js="table-car"]').get();
-				$tableCar.appendChild(app.createNewCar());
-				var idButton = app.getIdButtonRemove($tableCar);
+				var index = app.getIndexTr($tableCar);
+				$tableCar.appendChild(app.createNewCar(index));
 
-				var $buttonRemove = $('button[id="'+idButton+'"]');
+				var $buttonRemove = $('button[id="'+index+'"]');
 				$buttonRemove.on('click', function(){
 					app.removeCar(this.id, $tableCar);
 				});
 			},
 
-			getIdButtonRemove: function getIdButtonRemove(table){
-				var id = (table.childNodes.length)-1;
-				table.lastChild.setAttribute('id', id);
-				table.lastChild.childNodes[5].childNodes[0].setAttribute('id', id);
-				return id;
+			getIndexTr: function getIndexTr(table){
+				var index = 0;
+				if(table.lastChild)
+					index = Number(table.lastChild.id) +1;
+				return index;
 			},
 
-			createNewCar: function createNewCar(){
+			createNewCar: function createNewCar(index){
 				var $fragment = document.createDocumentFragment();
 				var $tr = document.createElement('tr');
 				var $tdImage = document.createElement('td');
@@ -88,17 +53,19 @@
 				var $tdRemove = document.createElement('td');
 				var $remove = document.createElement('button');
 
+				$tr.setAttribute('id', index);
+
 				$image.src = $('[data-js="image"]').get().value;
 				$tdImage.appendChild($image);
-
-				$remove.innerHTML = 'X';
-				$remove.setAttribute('data-js', 'remove');
-
 
 				$tdBrand.textContent = $('[data-js="brand-model"]').get().value;
 				$tdYear.textContent = $('[data-js="year"]').get().value;
 				$tdPlate.textContent = $('[data-js="plate"]').get().value;
 				$tdColor.textContent = $('[data-js="color"]').get().value;
+
+				$remove.innerHTML = 'X';
+				$remove.setAttribute('data-js', 'remove');
+				$remove.setAttribute('id', index);
 				$tdRemove.appendChild($remove);
 
 				$tr.appendChild($tdImage);
@@ -109,6 +76,14 @@
 				$tr.appendChild($tdRemove);
 
 				return $fragment.appendChild($tr);
+			},
+
+			removeCar: function removeCar(index, table){
+				Array.prototype.forEach.call(table.childNodes, function(item){
+					if(item.id === index){
+						item.remove();
+					}
+				});
 			},
 
 			companyInfo: function companyInfo(){

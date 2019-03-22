@@ -75,7 +75,21 @@
 				$tr.appendChild($tdColor);
 				$tr.appendChild($tdRemove);
 
+				app.cleanInputs();
 				return $fragment.appendChild($tr);
+			},
+
+			cleanInputs: function cleanInputs(){
+				var image = $('[data-js="image"]').get();
+				var brand = $('[data-js="brand-model"]').get();
+				var year = $('[data-js="year"]').get();
+				var plate = $('[data-js="plate"]').get();
+				var color = $('[data-js="color"]').get();
+				image.value = '';
+				brand.value = '';
+				year.value = '';
+				plate.value = '';
+				color.value = '';
 			},
 
 			removeCar: function removeCar(index, table){

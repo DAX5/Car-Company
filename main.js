@@ -86,7 +86,6 @@
 				$remove.innerHTML = 'X';
 				$remove.setAttribute('data-js', 'remove');
 
-
 				$tdBrand.textContent = $('[data-js="brand-model"]').get().value;
 				$tdYear.textContent = $('[data-js="year"]').get().value;
 				$tdPlate.textContent = $('[data-js="plate"]').get().value;
@@ -100,7 +99,16 @@
 				$tr.appendChild($tdColor);
 				$tr.appendChild($tdRemove);
 
+				//app.cleanInputs();
 				return $fragment.appendChild($tr);
+			},
+
+			cleanInputs: function cleanInputs(){
+				$('[data-js="image"]').get().value = '';
+				$('[data-js="brand-model"]').get().value = '';
+				$('[data-js="year"]').get().value = '';
+				$('[data-js="plate"]').get().value = '';
+				$('[data-js="color"]').get().value = '';
 			},
 
 			companyInfo: function companyInfo(){

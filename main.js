@@ -33,6 +33,8 @@
 			init: function init(){
 				this.companyInfo();
 				this.initEvents();
+				this.postData();
+				this.getData();
 			},
 
 			initEvents: function initEvents(){
@@ -106,6 +108,29 @@
 				ajax.open('GET', '/company.json', true);
 				ajax.send();
 				ajax.addEventListener('readystatechange', this.getCompanyInfo, false);
+			},
+			
+			postData: function postData(){
+				var ajax = new XMLHttpRequest();
+				ajax.open('POST', 'http://localhost:3000/car', true);
+				ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				ajax.send('brandModel=uno&year=2006&plate=hax8166&color=azul');
+				ajax.addEventListener('readystatechange', function(){
+					console.log('post com sucesso');
+				});
+			},
+
+			getData: function getData(){
+				var ajax = new XMLHttpRequest();
+				ajax.open('GET', 'http://localhost:3000/car', true);
+				ajax.send();
+				ajax.addEventListener('readystatechange', this.showCar, false);
+			},
+
+			showCar: function showCar(){
+				if(this.readyState === 4){
+					console.log(JSON.parse(this.responseText));
+				}
 			},
 
 			getCompanyInfo: function getCompanyInfo(){

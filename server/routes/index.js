@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
   data.push({
-    //image: req.body.image,
+    image: req.body.image,
     brandModel: req.body.brandModel,
     year: req.body.year,
     plate: req.body.plate,

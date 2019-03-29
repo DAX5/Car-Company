@@ -40,25 +40,10 @@
 				$('[data-js="form-register"]').on('submit', this.handleSubmit);
 			},
 
-			removeCar: function removeCar(id, table){
-				Array.prototype.forEach.call(table.childNodes, function(item){
-					if(item.id === id){
-						item.remove();
-					}
-				});
-			},
-
 			handleSubmit: function handleSubmit(e){
 				e.preventDefault();
 				var car = app.createNewCar();
 				app.postData(car);
-			},
-
-			getIdButtonRemove: function getIdButtonRemove(table){
-				var id = (table.childNodes.length)-1;
-				table.lastChild.setAttribute('id', id);
-				table.lastChild.childNodes[5].childNodes[0].setAttribute('id', id);
-				return id;
 			},
 
 			createNewCar: function createNewCar(){
@@ -93,7 +78,6 @@
 				ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 				ajax.send('image='+car.image+'&brandModel='+car.brandModel+'&year='+car.year+
 					'&plate='+car.plate+'&color='+car.color);
-				//ajax.addEventListener('readystatechange', this.getData, false);
 				app.getData();
 			},
 
@@ -107,20 +91,13 @@
 			hasCar: function hasCar(){
 				if(app.isReady.call(this)){
 					var cars = JSON.parse(this.responseText);
-					console.log(cars);
 					if(cars.length !== 0){
 						var $tableCar = $('[data-js="table-car"]').get();
 						$tableCar.innerHTML = '';
-						console.log($tableCar);
 						
 						cars.forEach(function(car){
 							var $fragment = app.showCars(car);
 							$tableCar.appendChild($fragment);
-							var idButton = app.getIdButtonRemove($tableCar);
-							var $buttonRemove = $('button[id="'+idButton+'"]');
-							$buttonRemove.on('click', function(){
-								app.removeCar(this.id, $tableCar);
-							});		
 						});
 					}
 				}
@@ -141,8 +118,10 @@
 				$image.src = car.image;
 				$tdImage.appendChild($image);
 
-				$remove.innerHTML = 'X';
-				$remove.setAttribute('data-js', 'remove');
+				$remove.textContent = 'X';
+				$remove.addEventListener('click', function(){
+		        	$tr.parentNode.removeChild($tr);
+				});
 
 				$tdBrand.textContent = car.brandModel;
 				$tdYear.textContent = car.year;
@@ -157,7 +136,7 @@
 				$tr.appendChild($tdColor);
 				$tr.appendChild($tdRemove);
 
-				//app.clearInputs();
+				app.clearInputs();
 				return $fragment.appendChild($tr);
 			},
 

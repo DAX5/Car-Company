@@ -22,7 +22,7 @@
 	A lógica do servidor que está criada nesso diretório desse desafio é o mesmo
 	do desafio anterior, com a diferença que, nesse desafio, nós temos a
 	implementação da regra para a deleção do carro =)
-	
+
 	A regra é a mesma das anteriores: crie uma branch `challenge-33` no seu
 	repositório do GitHub, e envie o pull request para lá.
 
@@ -80,7 +80,7 @@
 				ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 				ajax.send('image='+car.image+'&brandModel='+car.brandModel+'&year='+car.year+
 					'&plate='+car.plate+'&color='+car.color);
-				app.getData();
+				ajax.addEventListener('readystatechange', app.getData, false);
 			},
 
 			getData: function getData(){
@@ -122,8 +122,8 @@
 
 				$remove.textContent = 'X';
 				$remove.addEventListener('click', function(){
-		        	$tr.parentNode.removeChild($tr);
-				});
+					app.removeData(car.plate);
+				}, false);
 
 				$tdBrand.textContent = car.brandModel;
 				$tdYear.textContent = car.year;
@@ -140,6 +140,14 @@
 
 				app.clearInputs();
 				return $fragment.appendChild($tr);
+			},
+
+			removeData: function removeData(plate){
+				var ajax = new XMLHttpRequest();
+				ajax.open('DELETE', 'http://localhost:3000/car', true);
+				ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				ajax.send('plate='+plate);
+				ajax.addEventListener('readystatechange', app.getData, false);
 			},
 
 			getCompanyInfo: function getCompanyInfo(){
